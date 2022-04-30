@@ -1,17 +1,59 @@
 from selenium import webdriver
 import time
 
+#Wait function to allow for website loading
 
 def wait(x):
+
     time.sleep(x)
 
-def aria_search(label):
-    return 
+
+#Add function which adds the conenctions once relevant page is reached
+
+def add_connections(sum_of_requests):
+
+    #Finding all potential Connections
+
+        total_buttons = driver.find_elements_by_tag_name('button')
+
+        connect_buttons = [button for button in total_buttons if button.text == 'Connect']
+
+
+
+        #Sending the Connection Requests
+
+        for button in connect_buttons:
+
+            driver.execute_script("arguments[0].click();", button)
+
+            wait(2)
+
+
+            send = driver.find_element_by_xpath("//button[@aria-label='Send now']")
+
+            driver.execute_script("arguments[0].click();", send)
+
+            wait(2)
+
+
+            sum_of_requests+=1
+
+
+            close_privacy_restrictions = driver.find_element_by_xpath("//button[@aria-label='Dismiss']")
+
+            driver.execute_script("arguments[0].click();", close_privacy_restrictions)
+
+            wait(2)
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
 
-    connection_requests_sent = 0
 
     enter_driver_loc = input('Enter the file path of your webdriver: ')
 
@@ -64,46 +106,14 @@ if __name__ == "__main__":
 
     while connection_requests_sent <=80:
 
-        #Finding all potential Connections
+        #Run the add_connections function which will add all the available connections on the relevant page
 
-        total_buttons = driver.find_elements_by_tag_name('button')
-
-        connect_buttons = [button for button in total_buttons if button.text == 'Connect']
-
-        connection_requests_sent = 0
-
-
-
-
-        #Sending the Connection Requests
-
-        for button in connect_buttons:
-
-            driver.execute_script("arguments[0].click();", button)
-
-            wait(2)
-
-
-            send = driver.find_element_by_xpath("//button[@aria-label='Send now']")
-
-            driver.execute_script("arguments[0].click();", send)
-
-            wait(2)
-
-
-            close_privacy_restrictions = driver.find_element_by_xpath("//button[@aria-label='Dismiss']")
-
-            driver.execute_script("arguments[0].click();", close_privacy_restrictions)
-
-            wait(2)
-
-
-
+        add_connections(connection_requests_sent)
 
         #Going to the Next Page of Connections
 
         next_page = driver.find_element_by_xpath("//button[@aria-label='Next']")
-
+        
         driver.execute_script("arguments[0].click();", next_page)
 
         # Improvement: Do not limit connections to certain amount and let program work until daily connection request
